@@ -1,0 +1,123 @@
+html {
+	background-color: #F2F2F4;
+	font-family: 'Open Sans', sans-serif;
+	color: #424242;
+}
+
+.content {
+	width:80%;
+	padding-left:6em;
+	padding-top: 2em;
+}
+div.title {
+	font-family: 'Crafty Girls', cursive;
+}
+div.title img {
+	width: 2em;
+	height: auto;
+	float: left;
+	padding-right: 1em;
+}
+h2 {
+	font-weight: bold;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+	overflow: hidden;
+	background-color: #9D2235;
+}
+li {
+	float:left;
+  text-align: center;
+  padding: 0px 16px;
+
+}
+li a {
+	float:left;
+	padding: 14px 16px;
+	display: block;
+	text-decoration: none;
+	color: #000000;
+	font-weight: bolder;
+	font-size: larger;
+}
+
+nav li a:hover {
+	background-color: #424242;
+}
+
+.active {
+    background-color: #424242;
+}
+
+.main {
+	text-align: center;
+	line-height: 100%;
+}
+
+#profile {
+	height: auto;
+	width: 40em;
+}
+input
+{
+    width:100%;
+    box-sizing:border-box;
+}
+form {
+    width: 450px;
+    padding: 2em;
+    border: 1px solid black;
+    align-self: center;
+}
+#button {
+	width: 8em;
+	float:right;
+}
+
+img {
+	max-width:100%;
+	height:auto;
+}
+textarea
+{
+	width: 100%;
+	height: 12em;
+}
+
+div.portfolio{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-row: 1fr 1fr 1fr;
+}
+
+div.about {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-row: 1fr 3fr;
+	text-align: center;
+	align-self: center;
+	line-height: 100%;
+}
+div.about img {
+	display: block;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.port_images{
+	width: 100%;
+	height: 100%;
+}
+
+.review {
+	padding-bottom: 2em;
+}
+
+footer {
+    border-top: 1px solid;
+    padding-top: 20px;
+    margin-top: 50px;
+}

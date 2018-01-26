@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="portfolio.css">
+<link href="https://fonts.googleapis.com/css?family=Crafty+Girls|Open+Sans" rel="stylesheet">
+    <title>Hyrum's Web Server</title>
+  </head>
+
+  <div class="title">
+    <img src="icon.svg"  />
+    <h1></i>Family First Cabins</h1>
+  </div>
+
+<nav>
+<ul>
+  <li><a href="index.html">Home</a></li>
+  <li><a href="photos.html">Photos</a></li>
+  <li><a href="reviews.html">Reviews</a></li>
+  <li><a href="about.html">About</a></li>
+  <li><a class="active" href="contact.html">Contact Us</a></li>
+</ul>
+</nav>
+
+<div class="content">
+<h2>Contact Me</h2>
+
+<p>Email the Richardsons with questions or reservation requests</p>
+
+<div id='emailbox' style='width:100%;'>
+<form action="https://formspree.io/betterbythedozen@hotmail.com" method="POST">
+    <div>
+        <label for="name">Name:</label>
+		<br>
+        <input type="text" id="name" name="name">
+    </div>
+    <div>
+        <label for="mail">E-mail:</label>
+		<br>
+        <input type="email" id="mail" name="_replyto">
+    </div>
+    <div>
+        <label for="msg">Message:</label>
+		<br>
+        <textarea id="msg" name="userMessage"></textarea>
+    </div>
+    <input type="submit" id="button" value="Send">
+</form>
+</div>
+
+</div>
+
+
+
+<footer>
+<a href="github.com/hyrumrichardson/cs260">GitHub Repository</a>
+</footer>
