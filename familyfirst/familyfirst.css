@@ -11,10 +11,11 @@ html {
 }
 div.title {
 	font-family: 'Crafty Girls', cursive;
+	text-size: 2em;
 }
 div.title img {
-	width: 2em;
-	height: auto;
+	width: auto;
+	height: 2em;
 	float: left;
 	padding-right: 1em;
 }
@@ -46,6 +47,8 @@ li a {
 
 nav li a:hover {
 	background-color: #424242;
+	text-decoration: none;
+	color: #000000;
 }
 
 .active {
@@ -61,6 +64,7 @@ nav li a:hover {
 	height: auto;
 	width: 40em;
 }
+
 input
 {
     width:100%;
