@@ -60,6 +60,7 @@ var app = new Vue({
 	      this.current = json;
 	      this.loading = false;
 	      this.number = json.num;
+
 	      return true;
       }).catch(err => {
         this.number = this.max;
@@ -68,17 +69,21 @@ var app = new Vue({
     previousComic: function() {
       if (this.number !== 1)
         this.number = this.current.num - 1;
+      this.refreshRating();
     },
     nextComic: function() {
       this.number = this.current.num + 1;
+      this.refreshRating();
     },
     getRandom: function(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum and minimum are inclusive
+
     },
     randomComic: function() {
       this.number = this.getRandom(1, this.max);
+      this.refreshRating();
     },
     addComment: function() {
       if (!(this.number in this.comments))
@@ -91,9 +96,11 @@ var app = new Vue({
     },
     firstComic: function() {
       this.number = 1;
+      this.refreshRating();
     },
     lastComic: function() {
       this.number = this.max;
+      this.refreshRating();
     },
     addRating: function() {
       if (!(this.number in this.averageRatings))
@@ -104,6 +111,14 @@ var app = new Vue({
       this.averageRatings[this.number].average = this.averageRatings[this.number].total / this.averageRatings[this.number].number;
 
       this.avgRating = this.averageRatings[this.number].average;
+    },
+    refreshRating: function() {
+      if (!(this.number in this.averageRatings)) {
+        this.avgRating = 0;
+      }
+      else {
+        this.avgRating = this.averageRatings[this.number].average;
+      }
     }
   }
 });
