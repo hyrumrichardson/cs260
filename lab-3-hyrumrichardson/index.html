@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <title>XKCD Browser</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>XKCD Browser</h1>
+      <p>
+       <button v-on:click="previousComic">Previous</button>
+	     <button v-on:click="randomComic">Random</button>
+       <button v-on:click="nextComic">Next</button>
+       <br />
+       <button v-on:click="firstComic">First</button>
+       <button v-on:click="lastComic">Last</button>
+      </p>
+      <div v-if="loading">
+	       <p>Loading...</p>
+      </div>
+      <div v-else>
+        <h2>{{ current.safe_title}}</h2>
+       <img v-bind:src="current.img" v-bind:alt="current.alt">
+       <p><i># {{number}}, drawn on {{current.day}} {{month}} {{current.year}}</i></p>
+
+       <h3>Rating</h3>
+       <star-rating v-on:rating-selected="addRating" v-model="rating" v-bind:increment="0.5" active-color="#cc0000"></star-rating>
+       <p>
+         Average Rating: {{avgRating}}
+       </p>
+       <h3>Add a Comment</h3>
+	     <form v-on:submit.prevent="addComment">
+	      <input v-model="addedName" placeholder="Name"></p>
+	      <textarea v-model="addedComment"></textarea>
+	      <br/>
+	      <button type="submit">Comment</button>
+	     </form>
+	   <h3>Comments</h3>
+	     <div v-for="comment in comments[number]">
+	       <hr>
+	       <p>{{comment.text}}</p>
+	       <p><i>-- {{comment.author}}</i></p>
+         <p id="commentDateTime"><i>{{comment.dateTime}}</i></p>
+	     </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-star-rating/dist/star-rating.min.js"></script>
+    <script src="/script.js"></script>
+  </body>
+</html>
