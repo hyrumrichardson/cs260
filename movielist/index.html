@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Movie List</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Movies to Watch</h1>
+      <p v-show="activeTodos.length === 0">You have watched everything on your list! Good job!</p>
+	  <form v-on:submit.prevent="searchMovies">
+	<input type="text" v-model="search" id="search_param">
+	<button type="submit">Add Movie</button>
+    </form>
+    <div class="select" v-if="selecting">
+    <ol>
+      <li v-for="item in searchResults">
+        <img v-bind:src="imageLink(item)" v-bind:alt=item />
+        <label>{{ item.Title }}</label>
+        <button v-on:click="addItem(item)" class="add">Add</button>
+      </li>
+    </ol>
+    </div>
+    <div class="controls" v-if="todos.length !== 0">
+	     <button v-on:click="showAll()">Show All</button>
+	     <button v-on:click="showActive()">Show Active</button>
+	     <button v-on:click="showCompleted()">Show Completed</button>
+	     <button v-on:click="deleteCompleted()">Delete Completed</button>
+      </div>
+      <ol>
+	      <li v-for="item in filteredTodos" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
+          <input type="checkbox" v-model="item.completed" v-on:click="completeItem(item)" />
+          <img v-bind:src="imageLink(item)" v-bind:alt=item />
+          <label v-bind:class="{ completed: item.completed }">{{ item.Title }}</label>
+          <button v-on:click="deleteItem(item)" class="delete">X</button>
+        </li>
+      </ol>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
