@@ -60,3 +60,7 @@ button {
 .controls {
     margin-top: 20px;
 }
+
+#priority {
+    width: 10em;
+}

@@ -5,6 +5,7 @@ var app = new Vue({
     text: '',
     show: 'all',
     drag: {},
+	  select: '',
   },
   created: function() {
     this.getItems();
@@ -30,15 +31,16 @@ var app = new Vue({
   methods: {
 	getItems: function() {
       axios.get("/api/items").then(response => {
-		this.items = response.data;
-		return true;
+		    this.items = response.data;
+		    return true;
       }).catch(err => {
       });
     },
     addItem: function() {
       axios.post("/api/items", {
 			text: this.text,
-			completed: false
+			completed: false,
+			priority: this.select,
 		}).then(response => {
 			this.text = "";
 			this.getItems();
@@ -48,22 +50,23 @@ var app = new Vue({
     },
     completeItem: function(item) {
       axios.put("/api/items/" + item.id, {
-		text: item.text,
-		completed: !item.completed,
-		orderChange: false,
+		      text: item.text,
+		      completed: !item.completed,
+		      priority: item.priority,
+		      orderChange: false,
       }).then(response => {
-		return true;
+		      return true;
       }).catch(err => {
       });
     },
     deleteItem: function(item) {
       axios.delete("/api/items/" + item.id).then(response => {
-		this.getItems();
-		return true;
+		    this.getItems();
+		    return true;
       }).catch(err => {
       });
     },
-	showAll: function() {
+	  showAll: function() {
       this.show = 'all';
     },
     showActive: function() {
@@ -83,15 +86,55 @@ var app = new Vue({
     },
     dropItem: function(item) {
       axios.put("/api/items/" + this.drag.id, {
-		text: this.drag.text,
-		completed: this.drag.completed,
-		orderChange: true,
-		orderTarget: item.id
+		      text: this.drag.text,
+          completed: this.drag.completed,
+	        priority: this.drag.priority,
+	        orderChange: true,
+          orderTarget: item.id
       }).then(response => {
-		this.getItems();
-		return true;
+		      this.getItems();
+		      return true;
       }).catch(err => {
       });
     },
+    lowerPriority: function(item) {
+      var newPriority = item.priority - 1;
+      if (newPriority < 1) {newPriority = 1; return;}
+      axios.put("/api/items/" + item.id, {
+		      text: item.text,
+		      completed: item.completed,
+		      priority: newPriority,
+		      orderChange: false,
+      }).then(response => {
+        this.getItems();
+		      return true;
+      }).catch(err => {
+      });
+    },
+    raisePriority: function(item) {
+      var newPriority = item.priority + 1;
+      if (newPriority > 3) {newPriority = 3; return;}
+      axios.put("/api/items/" + item.id, {
+		      text: item.text,
+		      completed: item.completed,
+		      priority: newPriority,
+		      orderChange: false,
+      }).then(response => {
+        this.getItems();
+		      return true;
+      }).catch(err => {
+      });
+    },
+    sortPriority: function(item) {
+      this.getItems();
+      var itemIDs = [];
+      // this.items.forEach(function(item) {
+      //   itemIDs.push(item.id);
+      // });
+      // console.log(itemIDs);
+      this.items.sort(function(a,b) {
+        return a.priority - b.priority;
+      });
+    }
   }
 });
