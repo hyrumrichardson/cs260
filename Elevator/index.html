@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Elevator</title>
+  </head>
+  <body>
+    <div id="app">
+    <h1>Elevator</h1>
+    <div id="row">
+
+	  <div class="floors">
+      <ul>
+        <li>
+          <span class="floor">
+            Floor 4
+            <button v-on:click="down4()" v-bind:class="{active: floorDown4}">Down</button>
+          </span>
+        </li>
+        <li>
+          <span class="floor">
+            Floor 3
+            <button v-on:click="up3()" v-bind:class="{active: floorUp3}">Up</button>
+            <button v-on:click="down3()" v-bind:class="{active: floorDown3}">Down</button>
+          </span>
+        </li>
+        <li>
+          <span class="floor">
+            Floor 2
+            <button v-on:click="up2()" v-bind:class="{active: floorUp2}">Up</button>
+            <button v-on:click="down2()" v-bind:class="{active: floorDown2}">Down</button>
+          </span>
+        </li>
+        <li>
+          <span class="floor">
+            Floor 1
+            <button v-on:click="up1()" v-bind:class="{active: floorUp1}">Up</button>
+            <button v-on:click="down1()" v-bind:class="{active: floorDown1}">Down</button>
+          </span>
+        </li>
+        <li>
+          <span class="floor">
+            Floor 0
+            <button v-on:click="up0()" v-bind:class="{active: floorUp0}">Up</button>
+          </span>
+        </li>
+      </ul>
+
+    </div>
+    <div class="shaft">
+      <div id="elevator" v-bind:style="styles">
+        <p>
+          e
+        </p>
+      </div>
+    </div>
+    <div class="controldiv">
+      <div id="controls" v-bind:style="styles">
+        <ul>
+          <li><button v-on:click="floor4()" v-bind:class="{active: f4}">4</button></li>
+          <li><button v-on:click="floor3()" v-bind:class="{active: f3}">3</button></li>
+          <li><button v-on:click="floor2()" v-bind:class="{active: f2}">2</button></li>
+          <li><button v-on:click="floor1()" v-bind:class="{active: f1}">1</button></li>
+          <li><button v-on:click="floor0()" v-bind:class="{active: f0}">0</button></li>
+        </ul>
+      </div>
+
+    </div>
+    </div>
+  </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
