@@ -15,209 +15,241 @@ var app = new Vue({
     f1: false,
     f0: false,
     position: 0,
-    idle: true,
     pixel: 240,
-    goingUp: true,
+    state: 0, //-1 is going down, 0 is idle, 1 is going up
+    isOpen: false,
   },
   computed: {
     styles: function() {
-		return {
-			top: this.pixel + 'px',
-		};
-    }
+		  return {
+			   top: this.pixel + 'px',
+		  };
+    },
 	},
   methods: {
     up3: function() {
-      this.floorUp3 = !this.floorUp3;
-      if (this.idle && this.floorUp3) {
-        this.checkButton(3);
-      }
+      this.floorUp3 = true;
     },
     up2: function() {
-      this.floorUp2 = !this.floorUp2;
-      if (this.idle && this.floorUp2) {
-        this.checkButton(2);
-      }
+      this.floorUp2 = true;
     },
     up1: function() {
-      this.floorUp1 = !this.floorUp1;
-      if (this.idle && this.floorUp1) {
-        this.checkButton(1);
-      }
+      this.floorUp1 = true;
     },
     up0: function() {
-      this.floorUp0 = !this.floorUp0;
-      if (this.idle && this.floorUp0) {
-        this.checkButton(0);
-      }
+      this.floorUp0 = true;
     },
     down4: function() {
-      this.floorDown4 = !this.floorDown4;
-      if (this.idle && this.floorDown4) {
-        this.checkButton(4);
-      }
+      this.floorDown4 = true;
     },
     down3: function() {
-      this.floorDown3 = !this.floorDown3;
-      if (this.idle && this.floorDown3) {
-        this.checkButton(3);
-      }
+      this.floorDown3 = true;
     },
     down2: function() {
-      this.floorDown2 = !this.floorDown2;
-      if (this.idle && this.floorDown2) {
-        this.checkButton(2);
-      }
+      this.floorDown2 = true;
     },
     down1: function() {
-      this.floorDown1 = !this.floorDown1;
-      if (this.idle && this.floorDown1) {
-        this.checkButton(1);
-      }
+      this.floorDown1 = true;
     },
 
     floor4: function() {
-      this.f4 = !this.f4;
-      if (this.idle && this.f4) {
-        this.checkButton(4);
-      }
+      this.f4 = true;
     },
     floor3: function() {
-      this.f3 = !this.f3;
-      if (this.idle && this.f3) {
-        this.checkButton(3);
-      }
+      this.f3 = true;
     },
     floor2: function() {
-      this.f2 = !this.f2;
-      if (this.idle && this.f2) {
-        this.checkButton(2);
-      }
+      this.f2 = true;
     },
     floor1: function() {
-      this.f1 = !this.f1;
-      if (this.idle && this.f1) {
-        this.checkButton(1);
-      }
+      this.f1 = true;
     },
     floor0: function() {
-      this.f0 = !this.f0;
-      if (this.idle && this.f0) {
-        this.checkButton(0);
+      this.f0 = true;
+    },
+
+    update: function() {
+      console.log("update");
+
+      //Door Open Block
+      if (this.isOpen) {
+        this.doorDelay = this.doorDelay - 1;
+        if (this.doorDelay == 0) {
+          this.isOpen = false;
+          console.log("Doors Close");
+          if (!this.hasFloorsInPath()) {
+            console.log("Idle");
+            this.state = 0;
+          }
+        }
+      }
+      //Idle Block
+      else if (this.state == 0) {
+        var newstate = this.checkFloorButtons(this.position);
+        if (newstate > 0) {
+          console.log("Going Up");
+          this.state = 1;
+        }
+        else if (newstate < 0) {
+          console.log("Going Down");
+          this.state = -1;
+        }
+        else {
+          if (this.checkFloorButton(this.position)) {
+            this.clearFloor(this.position);
+          }
+          newstate = this.checkUpDownButtons(this.position);
+          if (newstate > 0) {
+            console.log("Going Up");
+            this.state = 1;
+          }
+          else if (newstate < 0) {
+            console.log("Going Down");
+            this.state = -1;
+          }
+          else {
+            if (this.checkFloorUp(this.position))
+            {
+              this.state = 1;
+              this.openDoor();
+            }
+            if (this.checkFloorDown(this.position))
+            {
+              this.state = -1;
+              this.openDoor();
+            }
+          }
+        }
+      }
+      //Going Up Block
+      else if (this.state == 1) {
+        if (this.pixel % 60 == 0) {
+          this.position = 4 - (this.pixel / 60);
+          console.log("At Floor " + this.position);
+
+          if (this.checkFloorButton(this.position) || this.checkFloorUp(this.position)) {
+            return this.openDoor();
+          }
+          else if (this.checkFloorDown(this.position)) {
+            if (!this.hasFloorsInPath(this.position)) {
+              for (var i = this.position + 1; i <= 4; i++) {
+                if (this.checkFloorDown(i)) {
+                  this.moveUp();
+                  return;
+                }
+              }
+              this.state = 0;
+              return this.openDoor();
+            }
+          }
+
+          this.moveUp();
+        }
+        else {
+          this.moveUp();
+        }
+      }
+      //Going Down Block
+      else if (this.state == -1) {
+        if (this.pixel % 60 == 0) {
+          this.position = 4 - (this.pixel / 60);
+          console.log("At Floor " + this.position);
+
+          if (this.checkFloorButton(this.position) || this.checkFloorDown(this.position)) {
+            return this.openDoor();
+          }
+          else if (this.checkFloorUp(this.position)) {
+            if (!this.hasFloorsInPath(this.position)) {
+              for (var i = this.position - 1; i >= 0; i--) {
+                if (this.checkFloorUp(i)) {
+                  this.moveDown();
+                  return;
+                }
+              }
+              this.state = 0;
+              return this.openDoor();
+            }
+          }
+          this.moveDown();
+        }
+        else {
+          this.moveDown();
+        }
+
       }
     },
 
-    idling: function() {
-      this.idle = true;
+    openDoor: function() {
+      console.log("Doors Open");
+      this.isOpen = true;
+      this.doorDelay = 60;
+      this.clearFloor(this.position);
+      if (this.state == 1) {
+        this.clearFloorUp(this.position);
+      }
+      else if (this.state == -1) {
+        this.clearFloorDown(this.position);
+      }
+      else if (this.state == 0) {
+        this.clearFloorUp(this.position);
+        this.clearFloorDown(this.position);
+      }
     },
 
-    goUp: function() {
-      console.log("Going Up");
-      this.idle = false;
-      this.goingUp = true;
-      this.animateUp();
-      this.position = this.position + 1;
-
-      console.log(this.position);
-
-      var millisecondsToWait = 500;
-      var self = this;
-      setTimeout(function() {
-        self.clearFloor(self.position);
-      }, millisecondsToWait);
-
-      if (this.checkUp(this.position)) {
-        this.goUp();
+    checkFloorButtons: function(position) {
+      var min = 5;
+      for (var i = 0; i <= 4; i++) {
+        if (this.checkFloorUp(i) == true && Math.abs(i - position) < min) {
+          min = i - position;
+        }
+        else if (this.checkFloorDown(i) == true && Math.abs(i - position) < min) {
+          min = i - position;
+        }
       }
-      else if (this.checkDown(this.position)) {
-        this.goDown();
+
+      if (min == 5) {
+        return 0;
       }
       else {
-        this.idle = true;
+        return min;
       }
     },
 
-    goDown: function() {
-      this.idle = false;
-      this.goingUp = false;
-      this.animateDown();
-      this.position = this.position - 1;
-
-      this.checkDown(this.position);
-
-      var millisecondsToWait = 500;
-      var self = this;
-      setTimeout(function() {
-        self.clearFloor(self.position);
-      }, millisecondsToWait);
-
-      if (this.checkDown(this.position)) {
-        this.goDown();
+    checkUpDownButtons: function(position) {
+      for (var i = 0; i <= 4; i++) {
+        if (this.checkFloorButton(i) == true) {
+          //console.log(i - position);
+          return i - position;
+        }
       }
-      if (this.checkUp(this.position)) {
-        this.goUp();
-      }
-      else {
-        this.idle = true;
-      }
+      return 0;
     },
 
-    checkButton: function(floor) {
-      var millisecondsToWait = 500;
-      var self = this;
-      setTimeout(function() {
-        self.clearFloor(self.position);
-      }, millisecondsToWait);
-      
-      if (this.position < floor) {
-        this.goingUp = true;
-        this.goUp();
+    hasFloorsInPath: function() {
+      if (this.state == 1) {
+        for (var i = this.position + 1; i <= 4; i++) {
+          if (this.checkFloorButton(i)) {return true;}
+          if (this.checkFloorUp(i)) {return true;}
+        }
       }
-      if (this.position > floor) {
-        this.goingUp = false;
-        this.goDown();
-      }
-    },
-
-    checkUp: function(pos) {
-      for (i = pos + 1; i <= 4; i++) {
-        if (this.checkFloor(i)) { return true;}
-        if (this.checkFloorUp(i)) { return true;}
-        if (this.checkFloorDown(i)) { return true;}
+      else if (this.state == -1) {
+        for (var i = this.position - 1; i >= 0; i--) {
+          if (this.checkFloorButton(i)) {return true;}
+          if (this.checkFloorDown(i)) {return true;}
+        }
       }
       return false;
     },
 
-    checkDown: function(pos) {
-      for (i = pos - 1; i >= 0; i--) {
-        if (this.checkFloor(i)) {return true;}
-        if (this.checkFloorDown(i)) { return true;}
-        if (this.checkFloorUp(i)) { return true;}
-      }
-      return false;
+    moveUp: function() {
+      this.pixel = this.pixel - 1;
     },
 
-    animateUp: function() {
-      var self = this;
-      for (i = 0; i < 60; i++) {
-        var millisecondsToWait = 500;
-        setTimeout(function() {
-          self.pixel = self.pixel - 1;
-        }, millisecondsToWait);
-      }
-    },
-    animateDown: function() {
-      var self = this;
-      for (i = 0; i < 60; i++) {
-        var millisecondsToWait = 500;
-        setTimeout(function() {
-          self.pixel = self.pixel + 1;
-        }, millisecondsToWait);
-      }
+    moveDown: function() {
+      this.pixel = this.pixel + 1;
     },
 
-    checkFloor: function(floornum) {
-
+    checkFloorButton: function(floornum) {
       switch (floornum) {
         case 0:
           return this.f0;
@@ -265,40 +297,66 @@ var app = new Vue({
     },
 
     clearFloor: function(floornum) {
-      console.log("clearing" + floornum);
+      console.log("Clearing " + floornum);
       switch (floornum) {
         case 0:
           this.f0 = false;
-          this.floorUp0 = false;
+          break;
         case 1:
           this.f1 = false;
-          if (this.goingUp) {
-            this.floorUp1 = false;
-          }
-          else {
-            this.floorDown1 = false;
-          }
+          break;
         case 2:
           this.f2 = false;
-          if (this.goingUp) {
-            this.floorUp2 = false;
-          }
-          else {
-            this.floorDown2 = false;
-          }
+          break;
         case 3:
           this.f3 = false;
-          if (this.goingUp) {
-            this.floorUp3 = false;
-          }
-          else {
-            this.floorDown3 = false;
-          }
+          break;
         case 4:
           this.f4 = false;
-          this.floorDown4 = false;
+          break;
         default:
       }
-    }
+    },
+    clearFloorUp: function(floornum) {
+      console.log("Clearing Up " + floornum);
+      switch (floornum) {
+        case 0:
+          this.floorUp0 = false;
+          break;
+        case 1:
+          this.floorUp1 = false;
+          break;
+        case 2:
+          this.floorUp2 = false;
+          break;
+        case 3:
+          this.floorUp3 = false;
+          break;
+        default:
+      }
+    },
+
+    clearFloorDown: function(floornum) {
+      console.log("Clearing Down " + floornum);
+      switch (floornum) {
+        case 1:
+          this.floorDown1 = false;
+          break;
+        case 2:
+          this.floorDown2 = false;
+          break;
+        case 3:
+          this.floorDown3 = false;
+          break;
+        case 4:
+          this.floorDown4 = false;
+          break;
+        default:
+      }
+    },
   },
 });
+
+window.setInterval(function() {
+  app.update();
+}, 60);

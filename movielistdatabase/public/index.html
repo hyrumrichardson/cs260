@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Movie List Database</title>
+  </head>
+  <body>
+    <div id="app">
+
+      <h1>Movies to Watch</h1>
+      <div v-if="!showlist" id="login">
+        <form v-on:submit.prevent="">
+    	<span>Username<input type="text" v-model="usernamefield" id="username"></span><br />
+      <span>Password<input type="text" v-model="passwordfield" id="password"></span><br />
+    	<button type="submit" v-on:click="login()">Login</button>
+      <button type="submit" v-on:click="register()">Register</button>
+        </form>
+        <p>
+          {{ loginerror}}
+        </p>
+      </div>
+      <div v-if="showlist" id="list">
+        <p>
+          Logged in: {{displayedUser.username}}
+        </p>
+        <p v-show="activemovies.length === 0">You have watched everything on your list! Good job!</p>
+  	  <form v-on:submit.prevent="searchMovies">
+  	<input type="text" v-model="search" id="search_param">
+  	<button type="submit">Find Movie</button>
+      </form>
+      <div class="select" v-if="selecting">
+      <ol>
+        <li v-for="item in searchResults">
+          <img v-bind:src="imageLink(item.Poster)" v-bind:alt=item />
+          <label>{{ item.Title }}</label>
+          <button v-on:click="addItem(item)" class="add">Add</button>
+        </li>
+      </ol>
+      </div>
+        <ol>
+  	      <li v-for="item in movies" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
+            <button v-on:click="completeItem(item)">O</button>
+            <span>{{item.completed}}</span>
+            <img v-bind:src="imageLink(item.poster)" v-bind:alt=item />
+            <label >{{ item.title }}</label>
+            <button v-on:click="deleteItem(item)" class="delete">X</button>
+            <!-- v-bind:class="{ completed: isCompleted(item) }" -->
+          </li>
+        </ol>
+      </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

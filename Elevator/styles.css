@@ -35,6 +35,20 @@ ul {
     top: 240px;
 }
 
+#doors {
+    background: #FFFFFF;
+    height: 30px;
+    width: 15px;
+    margin-left: 18px;
+    position: relative;
+    top: -15px;
+    text-color: #FFFFFF;
+}
+
+#doors > p {
+    color: #FFFFFF;
+}
+
 #controls {
     position: relative;
     top: 240px;

@@ -51,8 +51,13 @@
     <div class="shaft">
       <div id="elevator" v-bind:style="styles">
         <p>
-          e
+          el
         </p>
+        <div id="doors" v-if="isOpen">
+          <p id="doorp">
+            d
+          </p>
+        </div>
       </div>
     </div>
     <div class="controldiv">
